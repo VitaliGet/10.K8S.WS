@@ -19,4 +19,4 @@ jobs:
         eval `ssh-agent -s`
         ls -la ~
         cd ~/.ssh
-
+        ls -la
