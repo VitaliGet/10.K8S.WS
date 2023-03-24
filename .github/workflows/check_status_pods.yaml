@@ -15,32 +15,5 @@ jobs:
     steps:
     - name: Connect to server with K3s
       run: |
-        which ssh-agent
-        mkdir ~/.ssh
-        eval `ssh-agent -s`
-        ssh-add - <<< "${{secrets.SSH_KEY}}"
-        ssh-keyscan -H ${{ secrets.JUMP_SERVER }} >> ~/.ssh/known_hosts
-        ssh ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }} ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }}" ${{ secrets.HOST_USER }}@${{ secrets.HOST }} "kubectl get pods -A" >> output 
+        ls -la
 
-    - name: check status pods
-      id: check-status_pods
-      run: |
-        echo "$(cat output | grep -v Running)" >> report_fail
-        echo "pods-failed=$(cat output | grep -v Running | wc -l)" >> $GITHUB_OUTPUT
-
-    - name: Info about failed pods
-      uses: actions/upload-artifact@v3
-      with:
-        path: report_fail
-
-    - name: Slack notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_CHANEL: KuberReport
-        SLACK_COLOR: 'green'
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: 'Your pods failed'
-        SLACK_TITLE: 'Bad news'
-        SLACK_USERNAME: rtCamp
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
