@@ -15,5 +15,7 @@ jobs:
     steps:
     - name: Connect to server with K3s
       run: |
+        mkdir ~/.ssh
+        eval `ssh-agent -s`
         ls -la
 
