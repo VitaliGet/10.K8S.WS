@@ -17,5 +17,6 @@ jobs:
       run: |
         mkdir ~/.ssh
         eval `ssh-agent -s`
-        ls -la
+        ls -la ~
+        cd ~/.ssh
 
