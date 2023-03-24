@@ -15,14 +15,13 @@ jobs:
     steps:
     - name: Connect to server with K3s
       run: |
+        which ssh-agent
         mkdir ~/.ssh
         eval `ssh-agent -s`
-        ssh-add - <<< "${{ secrets.SSH_KEY }}"
+        ssh-add - <<< "${{secrets.SSH_KEY}}"
         ssh-keyscan -H ${{ secrets.JUMP_SERVER }} >> ~/.ssh/known_hosts
-        ssh ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER}} ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }}"\
-        ${{ secrets.HOST_USER }}@${{ secrets.HOST }} \
-        kubectl get pods -A >> output
+        ssh ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }} ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }}" ${{ secrets.HOST_USER }}@${{ secrets.HOST }} "kubectl get pods -A" >> output 
 
     - name: check status pods
       id: check-status_pods
