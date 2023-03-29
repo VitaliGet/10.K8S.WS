@@ -28,7 +28,7 @@ jobs:
       id: check_status_pods
       run: |
         echo "$(cat output | grep -v Running)" >> report_fail
-        echo "pods-failed=$(cat output | grep -v Running | wc -l)" >> $GITHUB_OUTPUT
+        echo "pods_failed=$(cat output | grep -v Running | wc -l)" >> $GITHUB_OUTPUT
 
     - name: Info about failed pods
       uses: actions/upload-artifact@v3
