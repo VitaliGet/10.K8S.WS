@@ -21,7 +21,8 @@ jobs:
         ssh-add - <<< "${{secrets.SSH_KEY}}"
         ssh-keyscan -H ${{ secrets.JUMP_SERVER }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }} ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }}" ${{ secrets.HOST_USER }}@${{ secrets.HOST }} "kubectl get pods -A" >> output
+        ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USER }}@${{ secrets.JUMP_SERVER }}" ${{ secrets.HOST_USER }}@${{ secrets.HOST }} \
+        kubectl get pods -A >> output
 
     - name: check status pods
       id: check-status_pods
@@ -37,7 +38,7 @@ jobs:
     - name: Slack notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_CHANEL: KuberReport
+        SLACK_CHANEL: kuberreport
         SLACK_COLOR: 'green'
         SLACK_ICON: https://github.com/rtCamp.png?size=48
         SLACK_MESSAGE: 'Your pods failed'
