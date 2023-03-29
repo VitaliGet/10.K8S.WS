@@ -36,7 +36,7 @@ jobs:
         path: report_fail
 
     - name: Slack notification
-      if: steps.check_status_pods.outputs.pods_fail > 1
+      if: steps.check_status_pods.outputs.pods_failed > 1
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_CHANEL: kuberreport
