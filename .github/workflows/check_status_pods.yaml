@@ -25,7 +25,7 @@ jobs:
         kubectl get pods -A >> output
 
     - name: check status pods
-      id: check-status_pods
+      id: check_status_pods
       run: |
         echo "$(cat output | grep -v Running)" >> report_fail
         echo "pods-failed=$(cat output | grep -v Running | wc -l)" >> $GITHUB_OUTPUT
@@ -36,6 +36,7 @@ jobs:
         path: report_fail
 
     - name: Slack notification
+      if: steps.check_status_pods.outputs.pods_fail > 1
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_CHANEL: kuberreport
